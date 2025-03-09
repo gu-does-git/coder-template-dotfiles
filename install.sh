@@ -9,7 +9,7 @@ nvm install node
 nvm use node
 
 # Deno install
-curl -fsSL https://deno.land/install.sh | sh
+curl -fsSL https://deno.land/install.sh | sh _ --yes
 
 # Bun install
 curl -fsSL https://bun.sh/install | bash
