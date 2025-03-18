@@ -17,4 +17,4 @@ curl -fsSL https://bun.sh/install | bash
 # Tailscale install
 curl -fsSL https://tailscale.com/install.sh | sh
 sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
-#sudo tailscale up
+sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
