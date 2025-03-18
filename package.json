@@ -3,13 +3,22 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/cz-commitlint": "^19.8.0",
     "@types/bun": "latest",
+    "commitizen": "^4.3.1",
+    "devmoji": "^2.3.0",
     "husky": "^9.1.7"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "commit": "clear && git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   }
 }
