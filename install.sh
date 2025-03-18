@@ -20,3 +20,17 @@ if [ -z "$OAUTH_CLIENT_SECRET" ]; then
     sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
     sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
 fi
+
+# Fish shell
+sudo apt-add-repository ppa:fish-shell/release-4
+sudo apt update
+sudo apt install fish
+
+# Starship
+curl -sS https://starship.rs/install.sh | sh
+
+# Add starship to fish config
+echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
+
+# Set fish as default shell
+chsh -s /usr/bin/fish
