@@ -1,1 +1,1 @@
-exec < /dev/tty && npx cz --hook || true
+npx devmoji -e --lint
