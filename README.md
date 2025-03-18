@@ -1,15 +1,17 @@
-# coder-template-dotfiles
+# Coder Template Dotfiles
 
-To install dependencies:
+This repository contains configuration files and setup scripts for a standardized [Coder](https://coder.com/) development environment. Coder is a platform for creating and managing cloud-based development environments.
 
-```bash
-bun install
-```
+The `install.sh` script handles the setup process and adds:
 
-To run:
+- [Node.js](https://github.com/nvm-sh/nvm)
+- [Bun](https://bun.sh/)
+- [Deno](https://deno.com/)
+- [Tailscale](https://tailscale.com/)
 
-```bash
-bun run index.ts
-```
 
-This project was created using `bun init` in bun v1.2.5. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## To-Do
+
+- Add starship and fish
+- Add configuration files for specific editors (VS Code, etc.).
+- Add instructions for updating the installed tools.
