@@ -27,7 +27,7 @@ sudo apt update
 sudo apt install fish
 
 # Starship
-curl -sS https://starship.rs/install.sh | sh
+curl -sS https://starship.rs/install.sh | sh -s -- -y
 
 # Add starship to fish config
 echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
