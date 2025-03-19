@@ -10,6 +10,7 @@ The `install.sh` script handles the setup process and adds:
 - 🌐 [Tailscale](https://tailscale.com/)
 - 🐠 [Fish](https://fishshell.com/)
 - 🚀 [Starship](https://starship.rs/)
+- ⚡️ [UV](https://astral.sh/uv/)
 
 ## To-Do
 

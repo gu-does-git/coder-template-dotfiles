@@ -31,3 +31,6 @@ curl -sS https://starship.rs/install.sh | sh -s -- -y
 echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
+
+# UV install
+curl -LsSf https://astral.sh/uv/install.sh | sh
