@@ -8,10 +8,10 @@ The `install.sh` script handles the setup process and adds:
 - [Bun](https://bun.sh/)
 - [Deno](https://deno.com/)
 - [Tailscale](https://tailscale.com/)
+- [Fish](https://fishshell.com/)
+- [Starship](https://starship.rs/)
 
 
 ## To-Do
 
-- Add starship and fish
-- Add configuration files for specific editors (VS Code, etc.).
-- Add instructions for updating the installed tools.
+- Add more tools.
