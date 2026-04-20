@@ -41,6 +41,9 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 # skill-seekers
 pipx install skill-seekers
 
+# openspec
+npm install -g @fission-ai/openspec@latest
+
 # pi coding agent + oh-pi
 npm install -g @mariozechner/pi-coding-agent
 npx @ifi/oh-pi

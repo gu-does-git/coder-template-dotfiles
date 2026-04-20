@@ -14,3 +14,4 @@ The `install.sh` script handles the setup process and adds:
 - 🐜 [pi coding agent](https://pi.dev) via [oh-pi](https://github.com/ifiokjr/oh-pi)
 - 🔍 [skill-seekers](https://pypi.org/project/skill-seekers/) via pipx
 - 📿 [beads](https://github.com/steveyegge/beads)
+- 🔧 [openspec](https://www.npmjs.com/package/@fission-ai/openspec)
