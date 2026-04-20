@@ -35,6 +35,12 @@ sudo chsh -s /usr/bin/fish
 # UV install
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# beads
+curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
+
+# skill-seekers
+pipx install skill-seekers
+
 # pi coding agent + oh-pi
 npm install -g @mariozechner/pi-coding-agent
 npx @ifi/oh-pi

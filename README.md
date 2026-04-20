@@ -12,3 +12,5 @@ The `install.sh` script handles the setup process and adds:
 - 🚀 [Starship](https://starship.rs/)
 - ⚡️ [UV](https://astral.sh/uv/)
 - 🐜 [pi coding agent](https://pi.dev) via [oh-pi](https://github.com/ifiokjr/oh-pi)
+- 🔍 [skill-seekers](https://pypi.org/project/skill-seekers/) via pipx
+- 📿 [beads](https://github.com/steveyegge/beads)
