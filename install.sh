@@ -34,3 +34,6 @@ sudo chsh -s /usr/bin/fish
 
 # UV install
 curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# pi coding agent + oh-pi
+npx @ifi/oh-pi

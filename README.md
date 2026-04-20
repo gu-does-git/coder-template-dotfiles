@@ -11,7 +11,4 @@ The `install.sh` script handles the setup process and adds:
 - 🐠 [Fish](https://fishshell.com/)
 - 🚀 [Starship](https://starship.rs/)
 - ⚡️ [UV](https://astral.sh/uv/)
-
-## To-Do
-
-- ☐ Add more tools.
+- 🐜 [pi coding agent](https://pi.dev) via [oh-pi](https://github.com/ifiokjr/oh-pi)
