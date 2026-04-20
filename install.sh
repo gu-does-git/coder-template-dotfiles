@@ -36,4 +36,5 @@ sudo chsh -s /usr/bin/fish
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # pi coding agent + oh-pi
+npm install -g @mariozechner/pi-coding-agent
 npx @ifi/oh-pi
