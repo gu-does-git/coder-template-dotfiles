@@ -15,3 +15,4 @@ The `install.sh` script handles the setup process and adds:
 - 🔍 [skill-seekers](https://pypi.org/project/skill-seekers/) via pipx
 - 📿 [beads](https://github.com/steveyegge/beads)
 - 🔧 [openspec](https://www.npmjs.com/package/@fission-ai/openspec)
+- 🤖 [Claude Code](https://claude.ai/code)

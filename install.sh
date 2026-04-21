@@ -35,6 +35,9 @@ sudo chsh -s /usr/bin/fish
 # UV install
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Claude Code
+curl -fsSL https://claude.ai/install.sh | bash
+
 # beads
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
