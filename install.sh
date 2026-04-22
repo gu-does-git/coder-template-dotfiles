@@ -47,7 +47,5 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 # skill-seekers
 pipx install skill-seekers
 
-# tallow
-bun add -g @dungle-scrubs/tallow
-tallow install
-echo 'alias pi tallow' >> ~/.config/fish/config.fish
+# pi coding agent
+bun install -g @oh-my-pi/pi-coding-agent

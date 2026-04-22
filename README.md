@@ -15,4 +15,4 @@ The `install.sh` script handles the setup process and adds:
 - 📿 [beads](https://github.com/steveyegge/beads)
 - 🤖 [Claude Code](https://claude.ai/code)
 - ❄️ [ServiceNow SDK](https://www.npmjs.com/package/@servicenow/sdk)
-- 🌾 [tallow](https://www.npmjs.com/package/@dungle-scrubs/tallow) (aliased as `pi`)
+- 🐜 [pi coding agent](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
