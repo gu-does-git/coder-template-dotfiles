@@ -40,7 +40,7 @@ cp "$(dirname "$0")/config.fish" ~/.config/fish/config.fish
 echo "fish_add_path $(dirname $(nvm which current))" >> ~/.config/fish/config.fish
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
-echo '[ -x /usr/bin/fish ] && [ -n "$SSH_CONNECTION" ] && exec /usr/bin/fish' >> ~/.bash_profile
+cp "$(dirname "$0")/bash_profile" ~/.bash_profile
 
 log_step "Zoxide"
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
