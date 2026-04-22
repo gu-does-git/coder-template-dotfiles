@@ -13,6 +13,7 @@ curl -fsSL https://deno.land/install.sh | sh _ --yes
 
 # Bun install
 curl -fsSL https://bun.sh/install | bash
+export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
 
 # Tailscale install
 if [ "$OAUTH_CLIENT_SECRET" != "" ] ; then
@@ -39,13 +40,13 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 curl -fsSL https://claude.ai/install.sh | bash
 
 # ServiceNow SDK
-bunx @servicenow/sdk
+bun install -g @servicenow/sdk
 
 # beads
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
 # skill-seekers
-pipx install skill-seekers
+pipx install skill-seekers || pipx upgrade skill-seekers
 
 # pi coding agent
 bun install -g @oh-my-pi/pi-coding-agent
