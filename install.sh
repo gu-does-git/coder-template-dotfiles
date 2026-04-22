@@ -38,6 +38,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Claude Code
 curl -fsSL https://claude.ai/install.sh | bash
 
+# ServiceNow SDK
+npx @servicenow/sdk
+
 # beads
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 

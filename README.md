@@ -16,3 +16,4 @@ The `install.sh` script handles the setup process and adds:
 - 📿 [beads](https://github.com/steveyegge/beads)
 - 🔧 [openspec](https://www.npmjs.com/package/@fission-ai/openspec)
 - 🤖 [Claude Code](https://claude.ai/code)
+- ❄️ [ServiceNow SDK](https://www.npmjs.com/package/@servicenow/sdk)
