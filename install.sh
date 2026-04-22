@@ -35,16 +35,15 @@ sudo apt install fish --yes
 
 log_step "Starship"
 curl -sS https://starship.rs/install.sh | sh -s -- -y
-echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
-echo 'if test -d $HOME/.nvm; set -l _nvm_ver (cat $HOME/.nvm/alias/default 2>/dev/null); if test -n "$_nvm_ver"; fish_add_path $HOME/.nvm/versions/node/$_nvm_ver/bin; end; end' >> ~/.config/fish/config.fish
+mkdir -p ~/.config/fish
+cp "$(dirname "$0")/config.fish" ~/.config/fish/config.fish
+echo "fish_add_path $(dirname $(nvm which current))" >> ~/.config/fish/config.fish
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
 echo '[ -x /usr/bin/fish ] && [ -n "$SSH_CONNECTION" ] && exec /usr/bin/fish' >> ~/.bash_profile
 
 log_step "Zoxide"
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-echo 'zoxide init fish | source' >> ~/.config/fish/config.fish
-echo 'alias cd z' >> ~/.config/fish/config.fish
 
 log_step "UV"
 curl -LsSf https://astral.sh/uv/install.sh | sh
