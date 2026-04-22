@@ -38,6 +38,7 @@ curl -sS https://starship.rs/install.sh | sh -s -- -y
 echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
+echo '[ -x /usr/bin/fish ] && exec /usr/bin/fish' >> ~/.bash_profile
 
 log_step "Zoxide"
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
