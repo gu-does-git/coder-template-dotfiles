@@ -39,7 +39,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 curl -fsSL https://claude.ai/install.sh | bash
 
 # ServiceNow SDK
-npx @servicenow/sdk
+bunx @servicenow/sdk
 
 # beads
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
@@ -47,9 +47,7 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 # skill-seekers
 pipx install skill-seekers
 
-# openspec
-npm install -g @fission-ai/openspec@latest
-
-# pi coding agent + oh-pi
-npm install -g @mariozechner/pi-coding-agent
-npx @ifi/oh-pi
+# tallow
+bun add -g @dungle-scrubs/tallow
+tallow install
+echo 'alias pi tallow' >> ~/.config/fish/config.fish
