@@ -45,6 +45,10 @@ echo '[ -x /usr/bin/fish ] && [ -n "$SSH_CONNECTION" ] && exec /usr/bin/fish' >>
 log_step "Zoxide"
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
+log_step "Fisher + fish plugins"
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+fish -c "fisher install icezyclon/zoxide.fish"
+
 log_step "UV"
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
