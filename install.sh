@@ -15,7 +15,7 @@ nvm install node
 nvm use node
 
 log_step "Deno"
-curl -fsSL https://deno.land/install.sh | sh _ --yes
+curl -fsSL https://deno.land/install.sh | sh
 
 log_step "Bun"
 curl -fsSL https://bun.sh/install | bash
@@ -38,7 +38,7 @@ curl -sS https://starship.rs/install.sh | sh -s -- -y
 echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
-echo '[ -x /usr/bin/fish ] && exec /usr/bin/fish' >> ~/.bash_profile
+echo '[ -x /usr/bin/fish ] && [ -n "$SSH_CONNECTION" ] && exec /usr/bin/fish' >> ~/.bash_profile
 
 log_step "Zoxide"
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
@@ -58,7 +58,7 @@ log_step "Beads"
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
 log_step "skill-seekers"
-pipx install skill-seekers || pipx upgrade skill-seekers
+pipx install --force skill-seekers
 
 log_step "Playwright"
 bun add -g playwright
