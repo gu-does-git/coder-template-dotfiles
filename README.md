@@ -10,6 +10,7 @@ The `install.sh` script handles the setup process and adds:
 - 🌐 [Tailscale](https://tailscale.com/)
 - 🐠 [Fish](https://fishshell.com/)
 - 🚀 [Starship](https://starship.rs/)
+- 🦎 [Zoxide](https://github.com/ajeetdsouza/zoxide)
 - ⚡️ [UV](https://astral.sh/uv/)
 - 🔍 [skill-seekers](https://pypi.org/project/skill-seekers/) via pipx
 - 📿 [beads](https://github.com/steveyegge/beads)

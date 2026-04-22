@@ -33,6 +33,11 @@ echo 'eval "$(starship init fish)"' >> ~/.config/fish/config.fish
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
 
+# Zoxide
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+echo 'zoxide init fish | source' >> ~/.config/fish/config.fish
+echo 'alias cd z' >> ~/.config/fish/config.fish
+
 # UV install
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
