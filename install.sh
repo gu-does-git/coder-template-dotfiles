@@ -59,6 +59,10 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 log_step "skill-seekers"
 pipx install skill-seekers || pipx upgrade skill-seekers
 
+log_step "Playwright"
+bun add -g playwright
+bunx playwright install --with-deps
+
 log_step "pi coding agent"
 bun install -g @oh-my-pi/pi-coding-agent
 pi install git:github.com/jonjonrankin/pi-caveman

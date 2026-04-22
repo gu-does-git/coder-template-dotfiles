@@ -14,6 +14,7 @@ The `install.sh` script handles the setup process and adds:
 - ⚡️ [UV](https://astral.sh/uv/)
 - 🔍 [skill-seekers](https://pypi.org/project/skill-seekers/) via pipx
 - 📿 [beads](https://github.com/steveyegge/beads)
+- 🎭 [Playwright](https://playwright.dev/)
 - 🤖 [Claude Code](https://claude.ai/code)
 - ❄️ [ServiceNow SDK](https://www.npmjs.com/package/@servicenow/sdk)
 - 🐜 [pi coding agent](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
