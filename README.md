@@ -18,3 +18,4 @@ The `install.sh` script handles the setup process and adds:
 - 🤖 [Claude Code](https://claude.ai/code)
 - ❄️ [ServiceNow SDK](https://www.npmjs.com/package/@servicenow/sdk)
 - 🐜 [pi coding agent](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
+- 🔎 [code-review-graph](https://code-review-graph.com/)

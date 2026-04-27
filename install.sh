@@ -41,6 +41,7 @@ echo "fish_add_path $(dirname $(nvm which current))" >> ~/.config/fish/config.fi
 starship preset no-runtime-versions -o ~/.config/starship.toml
 sudo chsh -s /usr/bin/fish
 cp "$(dirname "$0")/bash_profile" ~/.bash_profile
+cp "$(dirname "$0")/bashenv" ~/.bashenv
 
 log_step "Zoxide"
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
@@ -71,3 +72,7 @@ bunx playwright install --with-deps
 log_step "pi coding agent"
 bun install -g @oh-my-pi/pi-coding-agent
 pi install git:github.com/jonjonrankin/pi-caveman
+
+log_step "code-review-graph"
+pipx install code-review-graph
+code-review-graph install
