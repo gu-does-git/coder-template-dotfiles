@@ -6,6 +6,9 @@ log_step() {
     printf "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n"
 }
 
+log_step "System update"
+sudo apt update && sudo apt upgrade -y
+
 log_step "NVM + Node"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -67,7 +70,7 @@ pipx install --force skill-seekers
 
 log_step "Playwright"
 bun add -g playwright
-bunx playwright install --with-deps
+bunx playwright install --with-deps chromium
 
 log_step "pi coding agent"
 bun install -g @oh-my-pi/pi-coding-agent
