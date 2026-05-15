@@ -70,3 +70,20 @@ log_step "bun global packages"
 bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright
 pi install git:github.com/jonjonrankin/pi-caveman
 bunx playwright install --with-deps chromium
+
+log_step "Scripts"
+mkdir -p ~/.local/bin
+cp -r "$(dirname "$0")"/scripts/* ~/.local/bin/ 2>/dev/null || true
+chmod +x ~/.local/bin/* 2>/dev/null || true
+
+log_step "Crontab"
+{
+  if [ -n "$S3_ACCESS_KEY_ID" ] && [ -n "$S3_SECRET_ACCESS_KEY" ]; then
+    echo "S3_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID"
+    echo "S3_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY"
+    echo "S3_ENDPOINT=${S3_ENDPOINT:-https://s3.gupve.dev}"
+    echo "S3_BUCKET=${S3_BUCKET:-lobe}"
+    echo "PATH=$HOME/.bun/bin:/usr/local/bin:/usr/bin:/bin"
+  fi
+  cat "$(dirname "$0")/crontab"
+} | sudo tee /etc/cron.d/coder-template > /dev/null

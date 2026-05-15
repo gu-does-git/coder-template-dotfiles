@@ -1,0 +1,2 @@
+*/30 * * * * root bun $HOME/.local/bin/beads-healthcheck.ts >> /tmp/beads-healthcheck.log 2>&1
+@reboot sleep 300 && root bun $HOME/.local/bin/beads-healthcheck.ts >> /tmp/beads-healthcheck.log 2>&1

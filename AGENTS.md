@@ -7,7 +7,7 @@ Coder template dotfiles — config and setup scripts for standardized Coder clou
 ## Architecture & Data Flow
 
 1. **Bootstrap**: Coder runtime clones repo → runs `install.sh` as root.
-2. **install.sh** idempotently installs tools via curl pipes and apt, copies shell configs to `~/.config/fish/config.fish`, `~/.bash_profile`, `~/.bashenv`, sets Fish as login shell.
+2. **install.sh** idempotently installs tools via curl pipes and apt, copies shell configs to `~/.config/fish/config.fish`, `~/.bash_profile`, `~/.bashenv`, copies `scripts/` to `~/.local/bin`, generates dynamic crontab with S3 credentials from Coder env vars for beads healthcheck, sets Fish as login shell.
 3. **Shell init chain**:
    - `bash_profile` → sources `~/.bashrc`, sets `PATH`, execs Fish if SSH+interactive
    - `bashenv` — minimal PATH export (used by non-interactive shells)
@@ -20,6 +20,7 @@ Coder template dotfiles — config and setup scripts for standardized Coder clou
 |---|---|
 | `.husky/` | Git hooks (prepare-commit-msg runs devmoji, commit-msg runs commitlint) |
 | `.claude/` | Claude Code local settings |
+| `scripts/` | Custom shell scripts (copied to `~/.local/bin` by install.sh) |
 
 No `src/`, `tests/`, `lib/`, or `docs/` directories. Monorepo root is the only source of truth.
 
@@ -52,6 +53,8 @@ No test runner. No build step. No linter (beyond commitlint).
 | `.husky/prepare-commit-msg` | Husky hook — runs devmoji |
 | `.husky/commit-msg` | Husky hook — runs commitlint |
 | `package.json` | Name `coder-template-dotfiles`, scripts, devDependencies |
+|| `crontab` | Crontab file with schedule entries for beads healthcheck (`*/30` + `@reboot`). `install.sh` prepends S3 env vars from Coder before installing. |
+|| `scripts/beads-healthcheck.ts` | Cron job — runs `beads ready --json`, validates output, uploads to RustFS S3 (`s3://lobe/beads/latest.json`). Credentials injected via crontab env vars from Coder. |
 
 ## Runtime/Tooling Preferences
 
