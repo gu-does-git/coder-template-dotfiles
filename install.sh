@@ -66,17 +66,12 @@ pipx install --force skill-seekers
 pipx install code-review-graph
 code-review-graph install
 
-log_step "bun global packages"
-bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright
-pi install git:github.com/jonjonrankin/pi-caveman
-bunx playwright install --with-deps chromium
-
-log_step "Scripts"
+log_step "copying scripts"
 mkdir -p ~/.local/bin
 cp -r "$(dirname "$0")"/scripts/* ~/.local/bin/ 2>/dev/null || true
 chmod +x ~/.local/bin/* 2>/dev/null || true
 
-log_step "Crontab"
+log_step "copying crontab"
 {
   if [ -n "$S3_ACCESS_KEY_ID" ] && [ -n "$S3_SECRET_ACCESS_KEY" ]; then
     echo "S3_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID"
@@ -87,3 +82,9 @@ log_step "Crontab"
   fi
   cat "$(dirname "$0")/crontab"
 } | sudo tee /etc/cron.d/coder-template > /dev/null
+
+
+log_step "bun global packages"
+bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright
+pi install git:github.com/jonjonrankin/pi-caveman
+bunx playwright install --with-deps chromium
