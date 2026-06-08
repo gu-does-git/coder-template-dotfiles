@@ -6,6 +6,10 @@ log_step() {
     printf "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n"
 }
 
+log_step "DNS + apt update"
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+sudo apt-get update
+
 log_step "System update"
 sudo apt update && sudo apt upgrade -y
 
