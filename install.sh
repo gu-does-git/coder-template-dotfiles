@@ -7,7 +7,7 @@ log_step() {
 }
 
 log_step "DNS + apt update"
-echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+# echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
 sudo apt-get update
 
 log_step "System update"
