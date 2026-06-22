@@ -66,6 +66,9 @@ log_step "Tailscale"
 #     sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
 # fi
 
+log_step "Bubblewrap"
+sudo apt install bubblewrap
+
 log_step "UV"
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
