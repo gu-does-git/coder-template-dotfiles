@@ -60,11 +60,11 @@ log_step "Deno"
 curl -fsSL https://deno.land/install.sh | sh
 
 log_step "Tailscale"
-if [ "$OAUTH_CLIENT_SECRET" != "" ] ; then
-    curl -fsSL https://tailscale.com/install.sh | sh
-    sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
-    sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
-fi
+# if [ "$OAUTH_CLIENT_SECRET" != "" ] ; then
+#     curl -fsSL https://tailscale.com/install.sh | sh
+#     sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
+#     sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
+# fi
 
 log_step "UV"
 curl -LsSf https://astral.sh/uv/install.sh | sh
