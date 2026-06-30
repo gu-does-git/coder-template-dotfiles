@@ -102,6 +102,6 @@ log_step "copying crontab"
 
 
 log_step "bun global packages"
-bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright vercel
+bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright vercel skillkit
 pi install git:github.com/jonjonrankin/pi-caveman
 bunx playwright install --with-deps chromium
