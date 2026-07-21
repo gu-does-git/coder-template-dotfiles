@@ -66,6 +66,9 @@ if [ "$OAUTH_CLIENT_SECRET" != "" ] ; then
     sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
 fi
 
+log_step "hours"
+curl -fsSL https://github.com/dhth/hours/releases/download/v0.6.0/hours_0.6.0_linux_amd64.tar.gz | sudo tar -xz -C /usr/local/bin hours
+
 log_step "Bubblewrap"
 sudo apt install bubblewrap
 
