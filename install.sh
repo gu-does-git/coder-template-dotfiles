@@ -1,14 +1,17 @@
 #!/bin/bash
 #
 # Provisionador de ambiente do workspace coder.
-# Otimizado: upgrade opcional, idempotente, downloads paralelos.
+# Otimizado: upgrade condicional, idempotente, installers de home em
+# background durante o apt, apt consolidado (1 update + 1 install),
+# DEBIAN_FRONTEND=noninteractive (mata os debconf retries).
 #
 # Flags:
-#   SKIP_UPGRADE=1   pula `apt upgrade` (sistema inteiro — o passo mais lento)
+#   SKIP_UPGRADE=1    pula `apt upgrade` (sistema inteiro — o passo mais lento)
 #   SKIP_PLAYWRIGHT=1 pula o download do Chromium (E2E não precisa)
-#   FORCE=1          re-instala mesmo se já presente
+#   FORCE=1           re-instala mesmo se já presente
 #
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 log_step() {
     printf "\n\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n"
@@ -17,64 +20,11 @@ log_step() {
 }
 
 # ────────────────────────────────────────────────────────────────────────
-#  Apt (sequencial — apt não paraleliza)
+#  Installers de home — disparam AGORA, rodam em background enquanto o
+#  apt trabalha (não usam apt; o wait fica depois do apt).
 # ────────────────────────────────────────────────────────────────────────
 
-log_step "apt update"
-sudo apt-get update
-
-if [ "${SKIP_UPGRADE:-}" != "1" ]; then
-    # Simula antes: upgrade só roda se houver pacotes a atualizar.
-    # No restart do workspace, sem updates pendentes = pula em segundos.
-    UPGRADES=$(apt-get -s upgrade 2>/dev/null | grep -c '^Inst' || true)
-    if [ "$UPGRADES" -gt 0 ]; then
-        log_step "System upgrade ($UPGRADES pacotes)"
-        sudo apt upgrade -y
-    else
-        log_step "System upgrade (nada a atualizar — pulado)"
-    fi
-else
-    log_step "System upgrade (SKIPPED — SKIP_UPGRADE=1)"
-fi
-
-log_step "Fish shell"
-if ! command -v fish >/dev/null 2>&1 || [ "${FORCE:-}" = "1" ]; then
-    sudo apt-add-repository ppa:fish-shell/release-4
-    sudo apt update
-fi
-sudo apt install fish --yes --no-install-recommends
-
-log_step "GitHub CLI"
-if ! command -v gh >/dev/null 2>&1 || [ "${FORCE:-}" = "1" ]; then
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-    sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-    sudo apt update
-fi
-sudo apt install gh -y --no-install-recommends
-
-log_step "CLI tools"
-sudo apt install -y --no-install-recommends jq bat fzf eza ripgrep fd-find bubblewrap
-
-# ────────────────────────────────────────────────────────────────────────
-#  NVM + Node (sequencial — nvm precisa do shell)
-# ────────────────────────────────────────────────────────────────────────
-
-log_step "NVM + Node"
-if [ ! -s "$HOME/.nvm/nvm.sh" ] || [ "${FORCE:-}" = "1" ]; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-fi
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-# shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm install node
-nvm use node
-
-# ────────────────────────────────────────────────────────────────────────
-#  Installers independentes — paralelo
-# ────────────────────────────────────────────────────────────────────────
-
-log_step "Installers em paralelo (bun, starship, zoxide, deno, uv, claude, beads, timetrace)"
+log_step "Installers em background (bun, starship, zoxide, deno, uv, claude, beads, timetrace)"
 (
     command -v bun >/dev/null 2>&1 && [ "${FORCE:-}" != "1" ] || curl -fsSL https://bun.sh/install | bash
 ) &
@@ -99,9 +49,60 @@ log_step "Installers em paralelo (bun, starship, zoxide, deno, uv, claude, beads
 (
     [ -x /usr/local/bin/timetrace ] && [ "${FORCE:-}" != "1" ] || curl -fsSL https://github.com/dominikbraun/timetrace/releases/download/v0.14.3/timetrace-linux-amd64.tar.gz | sudo tar -xz -C /usr/local/bin
 ) &
+
+# ────────────────────────────────────────────────────────────────────────
+#  Apt — repos primeiro (idempotente), 1 update, upgrade condicional,
+#  1 install com tudo.
+# ────────────────────────────────────────────────────────────────────────
+
+log_step "Adicionando repos (fish, gh)"
+sudo apt-add-repository ppa:fish-shell/release-4
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+log_step "apt update"
+sudo apt-get update
+
+if [ "${SKIP_UPGRADE:-}" != "1" ]; then
+    # Simula antes: upgrade só roda se houver pacotes a atualizar.
+    # No restart do workspace, sem updates pendentes = pula em segundos.
+    UPGRADES=$(apt-get -s upgrade 2>/dev/null | grep -c '^Inst' || true)
+    if [ "$UPGRADES" -gt 0 ]; then
+        log_step "System upgrade ($UPGRADES pacotes)"
+        sudo apt upgrade -y
+    else
+        log_step "System upgrade (nada a atualizar — pulado)"
+    fi
+else
+    log_step "System upgrade (SKIPPED — SKIP_UPGRADE=1)"
+fi
+
+log_step "apt install (fish, gh, CLI tools)"
+sudo apt install -y --no-install-recommends \
+    fish gh jq bat fzf eza ripgrep fd-find bubblewrap
+
+# ────────────────────────────────────────────────────────────────────────
+#  Espera os installers de home terminarem
+# ────────────────────────────────────────────────────────────────────────
+
 wait
 
 export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
+
+# ────────────────────────────────────────────────────────────────────────
+#  NVM + Node (sequencial — nvm precisa do shell)
+# ────────────────────────────────────────────────────────────────────────
+
+log_step "NVM + Node"
+if [ ! -s "$HOME/.nvm/nvm.sh" ] || [ "${FORCE:-}" = "1" ]; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+fi
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install node
+nvm use node
 
 # ────────────────────────────────────────────────────────────────────────
 #  Configuração de shell (depende de fish + starship + nvm)
@@ -122,16 +123,21 @@ cp "$(dirname "$0")/bash_profile" ~/.bash_profile
 cp "$(dirname "$0")/bashenv" ~/.bashenv
 
 log_step "Fisher + fish plugins"
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+# Idempotente: só baixa o fisher se não estiver instalado (home persiste).
+fish -c "if not functions -q fisher; curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; end; fisher install jorgebucaran/fisher"
 fish -c "fisher install icezyclon/zoxide.fish"
 
 # ────────────────────────────────────────────────────────────────────────
-#  Tailscale (opcional — só com OAUTH_CLIENT_SECRET)
+#  Tailscale (idempotente; install.sh detecta a versão do ubuntu)
 # ────────────────────────────────────────────────────────────────────────
 
-if [ "${OAUTH_CLIENT_SECRET:-}" != "" ]; then
-    log_step "Tailscale"
+if ! command -v tailscale >/dev/null 2>&1 || [ "${FORCE:-}" = "1" ]; then
+    log_step "Tailscale install"
     curl -fsSL https://tailscale.com/install.sh | sh
+fi
+
+if [ "${OAUTH_CLIENT_SECRET:-}" != "" ]; then
+    log_step "Tailscale up"
     sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
     sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
 else
@@ -139,7 +145,7 @@ else
 fi
 
 # ────────────────────────────────────────────────────────────────────────
-#  Pipx
+#  uv tool packages
 # ────────────────────────────────────────────────────────────────────────
 
 log_step "uv tool packages"
@@ -149,6 +155,7 @@ log_step "uv tool packages"
 uv tool install --force skill-seekers
 uv tool install --force code-review-graph
 code-review-graph install
+
 # ────────────────────────────────────────────────────────────────────────
 #  Scripts + crontab
 # ────────────────────────────────────────────────────────────────────────
