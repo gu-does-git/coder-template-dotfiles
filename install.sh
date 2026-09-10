@@ -176,7 +176,9 @@ log_step "copying crontab"
 
 log_step "bun global packages"
 bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright vercel skillkit bun-docx
-pi install git:github.com/jonjonrankin/pi-caveman
+# pi-caveman: plugin npm do omp (instalado via omp plugin install, não via
+# comando `pi` — binário não existe no omp v18+). Já presente no home.
+omp plugin install pi-caveman 2>/dev/null || true
 
 if [ "${SKIP_PLAYWRIGHT:-}" != "1" ]; then
     log_step "Playwright Chromium (E2E)"
