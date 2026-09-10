@@ -110,8 +110,13 @@ export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
 log_step "Configuração de shell"
 mkdir -p ~/.config/fish
 cp "$(dirname "$0")/config.fish" ~/.config/fish/config.fish
-echo "fish_add_path $(dirname $(nvm which current))" >> ~/.config/fish/config.fish
-starship preset no-runtime-versions -o ~/.config/starship.toml
+# Idempotente: só adiciona a linha do node se ainda não existir
+# (restart do workspace = home persiste = config.fish já tem).
+NODE_BIN_DIR=$(dirname "$(nvm which current)")
+if ! grep -qF "fish_add_path $NODE_BIN_DIR" ~/.config/fish/config.fish; then
+  echo "fish_add_path $NODE_BIN_DIR" >> ~/.config/fish/config.fish
+fi
+starship preset no-runtime-versions -o ~/.config/starship.toml --force
 sudo chsh -s /usr/bin/fish
 cp "$(dirname "$0")/bash_profile" ~/.bash_profile
 cp "$(dirname "$0")/bashenv" ~/.bashenv
