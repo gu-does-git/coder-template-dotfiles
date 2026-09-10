@@ -144,7 +144,9 @@ fi
 
 log_step "pipx packages"
 pipx install --force skill-seekers
-pipx install code-review-graph
+# --force: venv quebrado de restart anterior (home persiste) seria pulado
+# sem ele, e o binário apontaria pra um venv sem o módulo.
+pipx install --force code-review-graph
 code-review-graph install
 
 # ────────────────────────────────────────────────────────────────────────
