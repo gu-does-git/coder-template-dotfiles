@@ -142,13 +142,13 @@ fi
 #  Pipx
 # ────────────────────────────────────────────────────────────────────────
 
-log_step "pipx packages"
-pipx install --force skill-seekers
+log_step "uv tool packages"
+# uv tool install: substituto do pipx (uv já instalado no bloco de installers).
 # --force: venv quebrado de restart anterior (home persiste) seria pulado
 # sem ele, e o binário apontaria pra um venv sem o módulo.
-pipx install --force code-review-graph
+uv tool install --force skill-seekers
+uv tool install --force code-review-graph
 code-review-graph install
-
 # ────────────────────────────────────────────────────────────────────────
 #  Scripts + crontab
 # ────────────────────────────────────────────────────────────────────────
