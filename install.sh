@@ -139,7 +139,10 @@ fi
 if [ "${OAUTH_CLIENT_SECRET:-}" != "" ]; then
     log_step "Tailscale up"
     sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
-    sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder
+    # --accept-dns=false: container não tem systemd-resolved; sem a flag o
+    # MagicDNS reescreve /etc/resolv.conf p/ 100.100.100.100 e todo lookup
+    # externo (pypi, etc.) quebra após o `up`.
+    sudo tailscale up --auth-key=$OAUTH_CLIENT_SECRET --advertise-tags=tag:coder --accept-dns=false
 else
     log_step "Tailscale (SKIPPED — sem OAUTH_CLIENT_SECRET)"
 fi
