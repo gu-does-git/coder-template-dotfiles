@@ -148,6 +148,19 @@ else
 fi
 
 # ────────────────────────────────────────────────────────────────────────
+#  DNS do container — o Docker herda o resolv.conf do host, que aponta para
+#  100.100.100.100 (MagicDNS do host). Aqui dentro esse IP roteia pelo
+#  tailscaled LOCAL, que está com --accept-dns=false e sem upstream →
+#  SERVFAIL em toda query (pypi, crates, npm). Probe ativo: só reescreve se
+#  a resolução de fato falhar, então é inofensivo onde o DNS funciona.
+# ────────────────────────────────────────────────────────────────────────
+
+if ! getent hosts pypi.org >/dev/null 2>&1; then
+    log_step "DNS do container quebrado — trocando resolv.conf"
+    printf 'nameserver 1.1.1.1\nnameserver 9.9.9.9\n' | sudo tee /etc/resolv.conf > /dev/null
+fi
+
+# ────────────────────────────────────────────────────────────────────────
 #  uv tool packages
 # ────────────────────────────────────────────────────────────────────────
 
