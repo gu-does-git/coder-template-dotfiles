@@ -1,1 +1,9 @@
 export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
+
+# harness (omp) -> observabilidade self-hosted: stack `phoenix` no homelab
+# Phoenix so aceita traces; /v1/logs e /v1/metrics devolvem 405, entao os dois
+# exporters ficam off para nao gerar requisicao recusada a cada turno.
+export OTEL_EXPORTER_OTLP_ENDPOINT="http://192.168.1.202:6006"
+export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+export OTEL_LOGS_EXPORTER="none"
+export OTEL_METRICS_EXPORTER="none"
