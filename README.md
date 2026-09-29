@@ -15,6 +15,8 @@ The `install.sh` script handles the setup process and adds:
 - 🔍 [skill-seekers](https://pypi.org/project/skill-seekers/) via pipx
 - 📿 [beads](https://github.com/steveyegge/beads)
 - 🎭 [Playwright](https://playwright.dev/)
+- 🌳 [Worktrunk](https://worktrunk.dev/) — git worktree CLI (`wt`, com shell integration do fish)
+- 🧩 [yq](https://mikefarah.gitbook.io/yq) — processador YAML/JSON/XML
 - 🤖 [Claude Code](https://claude.ai/code)
 - ❄️ [ServiceNow SDK](https://www.npmjs.com/package/@servicenow/sdk)
 - 🐜 [pi coding agent](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
