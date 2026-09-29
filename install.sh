@@ -141,6 +141,29 @@ mkdir -p ~/.config/fish/functions
 wt config shell install fish --yes
 
 # ────────────────────────────────────────────────────────────────────────
+#  ~/.local/bin/env — shim de PATH do dotfiles do Coder. Como ~/.local/bin
+#  vem antes de /usr/bin no PATH, o shim shadowa o env(1) real e (sem
+#  passthrough) todo `env VAR=x cmd` vira no-op silencioso — é exatamente o
+#  que o wrapper de shell do wt chama (env WORKTRUNK_DIRECTIVE_CD_FILE=...).
+#  ~/.bashrc e ~/.profile dão `source` nele; só remenda a versão antiga.
+# ────────────────────────────────────────────────────────────────────────
+
+ENV_SHIM="$HOME/.local/bin/env"
+if [ -f "$ENV_SHIM" ] && ! grep -qF 'exec /usr/bin/env "$@"' "$ENV_SHIM"; then
+    log_step "Remendando shim ~/.local/bin/env (shadow de /usr/bin/env)"
+    # Append (não overwrite): quando executado, delega ao env(1) real;
+    # quando fonteado, $0 é o nome do shell e o append não roda.
+    cat >> "$ENV_SHIM" <<'SHIM'
+
+# Passthrough para o env(1) real quando este arquivo é EXECUTADO. O shell não
+# executa ao dar `source` ($0 = nome do shell), então o PATH acima continua ok.
+case "$0" in
+    *env) exec /usr/bin/env "$@" ;;
+esac
+SHIM
+fi
+
+# ────────────────────────────────────────────────────────────────────────
 #  Tailscale (idempotente; install.sh detecta a versão do ubuntu)
 # ────────────────────────────────────────────────────────────────────────
 

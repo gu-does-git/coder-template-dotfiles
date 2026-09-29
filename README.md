@@ -63,6 +63,8 @@ Designed to run in the Coder workspace bootstrap (as root, non-interactive; `DEB
 | `bash_profile` | Copied to `~/.bash_profile` — sources `~/.bashrc`, sets PATH + `BASH_ENV`, aliases, and `exec`s Fish on interactive SSH sessions |
 | `bashenv` | Copied to `~/.bashenv` — minimal PATH export for non-interactive Bash (used via `BASH_ENV`) |
 
+`install.sh` also repairs the image's `~/.local/bin/env` PATH shim. It sits before `/usr/bin/env` on `PATH`, so without a passthrough it swallowed every `env VAR=x cmd` call — the Worktrunk shell wrapper runs `env WORKTRUNK_DIRECTIVE_CD_FILE=… wt …`, which is why `wt` silently did nothing under Fish. The install appends an `exec /usr/bin/env "$@"` guard that only fires when the file is executed, leaving `source`ing from `~/.bashrc` / `~/.profile` untouched.
+
 ## ⏰ Scripts & crontab
 
 `scripts/*` is copied to `~/.local/bin` and `crontab` is installed as `/etc/cron.d/coder-template` (with the S3 credentials prepended when present):
