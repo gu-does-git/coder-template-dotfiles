@@ -24,7 +24,7 @@ log_step() {
 #  apt trabalha (não usam apt; o wait fica depois do apt).
 # ────────────────────────────────────────────────────────────────────────
 
-log_step "Installers em background (bun, starship, zoxide, deno, uv, claude, beads, timetrace)"
+log_step "Installers em background (bun, starship, zoxide, deno, uv, claude, beads, timetrace, worktrunk, yq)"
 (
     command -v bun >/dev/null 2>&1 && [ "${FORCE:-}" != "1" ] || curl -fsSL https://bun.sh/install | bash
 ) &
@@ -48,6 +48,13 @@ log_step "Installers em background (bun, starship, zoxide, deno, uv, claude, bea
 ) &
 (
     [ -x /usr/local/bin/timetrace ] && [ "${FORCE:-}" != "1" ] || curl -fsSL https://github.com/dominikbraun/timetrace/releases/download/v0.14.3/timetrace-linux-amd64.tar.gz | sudo tar -xz -C /usr/local/bin
+) &
+# worktrunk (wt): tarball tem dir versionado → strip-components=1
+(
+    [ -x /usr/local/bin/wt ] && [ "${FORCE:-}" != "1" ] || curl -fsSL https://github.com/max-sixty/worktrunk/releases/latest/download/worktrunk-x86_64-unknown-linux-musl.tar.xz | sudo tar -xJ -C /usr/local/bin --strip-components=1 worktrunk-x86_64-unknown-linux-musl/wt
+) &
+(
+    [ -x /usr/local/bin/yq ] && [ "${FORCE:-}" != "1" ] || curl -fsSL -o /tmp/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo install -m 0755 /tmp/yq /usr/local/bin/yq
 ) &
 
 # ────────────────────────────────────────────────────────────────────────
@@ -126,6 +133,12 @@ log_step "Fisher + fish plugins"
 # Idempotente: só baixa o fisher se não estiver instalado (home persiste).
 fish -c "if not functions -q fisher; curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; end; fisher install jorgebucaran/fisher"
 fish -c "fisher install icezyclon/zoxide.fish"
+
+# Integração de shell do worktrunk: sem ela `wt switch` não faz cd.
+# Idempotente (reescreve functions/wt.fish + completions).
+log_step "Worktrunk shell integration"
+mkdir -p ~/.config/fish/functions
+wt config shell install fish --yes
 
 # ────────────────────────────────────────────────────────────────────────
 #  Tailscale (idempotente; install.sh detecta a versão do ubuntu)

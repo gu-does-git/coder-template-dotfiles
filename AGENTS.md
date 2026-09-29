@@ -45,7 +45,7 @@ No test runner. No build step. No linter (beyond commitlint).
 
 | File | Role |
 |---|---|
-| `install.sh` | **Entry point** — provisions entire dev environment. Installs: Fish, NVM+Node, Bun, Deno, Tailscale, Starship, Zoxide, UV, Claude Code, Beads, pipx packages (skill-seekers, code-review-graph), bun globals (@servicenow/sdk, @oh-my-pi/pi-coding-agent, playwright), pi agent caveman skill |
+|`install.sh`|**Entry point** — provisions entire dev environment. Installs: Fish, NVM+Node, Bun, Deno, Tailscale, Starship, Zoxide, UV, Claude Code, Beads, Worktrunk (`wt` + fish shell integration), yq, pipx packages (skill-seekers, code-review-graph), bun globals (@servicenow/sdk, @oh-my-pi/pi-coding-agent, playwright), pi agent caveman skill|
 | `config.fish` | Fish shell config — Starship init, PATH additions |
 | `bash_profile` | Bash login profile — PATH, BASH_ENV, auto-exec Fish |
 | `bashenv` | Non-interactive bash env — PATH only |
