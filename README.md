@@ -59,7 +59,7 @@ Designed to run in the Coder workspace bootstrap (as root, non-interactive; `DEB
 
 | File | Purpose |
 |---|---|
-| `config.fish` | Copied to `~/.config/fish/config.fish` — Starship init, PATH (`~/.bun/bin`, `~/.local/bin`, `~/.deno/bin`), aliases (`cat`→`bat`, `ls`/`ll`/`la`→`eza`) |
+| `config.fish` | Copied to `~/.config/fish/config.fish` — Starship init, PATH (`~/.bun/bin`, `~/.local/bin`, `~/.deno/bin`), aliases (`cat`→`bat`, `ls`/`ll`/`la`→`eza`), disabled greeting banner (`set -g fish_greeting`) |
 | `bash_profile` | Copied to `~/.bash_profile` — sources `~/.bashrc`, sets PATH + `BASH_ENV`, aliases, and `exec`s Fish on interactive SSH sessions |
 | `bashenv` | Copied to `~/.bashenv` — minimal PATH export for non-interactive Bash (used via `BASH_ENV`) |
 

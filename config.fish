@@ -1,3 +1,6 @@
+# Sem banner de boas-vindas
+set -g fish_greeting
+
 # Starship prompt
 eval "$(starship init fish)"
 
