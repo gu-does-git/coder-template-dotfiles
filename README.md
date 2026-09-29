@@ -31,7 +31,7 @@ Designed to run in the Coder workspace bootstrap (as root, non-interactive; `DEB
 2. **apt** — adds the Fish PPA + GitHub CLI apt repo, one `apt-get update`, a conditional `apt upgrade` (simulated first: skipped when nothing is pending), then a single consolidated `apt install`.
 3. **`wait`** — joins the background installers, then PATH is expanded with `~/.bun/bin` and `~/.local/bin`.
 4. **NVM + Node** — sequential (`nvm install node`).
-5. **Shell config** — copies `config.fish`, `bash_profile`, `bashenv`; appends the NVM node bin dir to Fish PATH; generates `~/.config/starship.toml`; sets Fish as login shell; installs Fisher + plugins; installs Worktrunk shell integration.
+5. **Shell config** — copies `config.fish`, `bash_profile`, `bashenv`; appends the NVM node bin dir to Fish PATH; generates `~/.config/starship.toml` (the preset leaves `add_newline` at its `true` default, which renders a blank line before every prompt — the install sets it to `false`); sets Fish as login shell; installs Fisher + plugins; installs Worktrunk shell integration.
 6. **Tailscale** — installs the client; joins the tailnet **only if `OAUTH_CLIENT_SECRET` is set**.
 7. **Container DNS probe** — if `pypi.org` fails to resolve, rewrites `/etc/resolv.conf` to `1.1.1.1` / `9.9.9.9` (the container inherits the host `resolv.conf` pointing at `100.100.100.100` MagicDNS, which does not route from inside the container).
 8. **uv tool packages** — `skill-seekers`, `code-review-graph`.

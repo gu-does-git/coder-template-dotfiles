@@ -125,6 +125,9 @@ if ! grep -qF "fish_add_path $NODE_BIN_DIR" ~/.config/fish/config.fish; then
   echo "fish_add_path $NODE_BIN_DIR" >> ~/.config/fish/config.fish
 fi
 starship preset no-runtime-versions -o ~/.config/starship.toml --force
+# O preset não define add_newline e o default do starship é true → linha em
+# branco antes de cada prompt. `starship config` edita a chave no arquivo.
+starship config add_newline false
 sudo chsh -s /usr/bin/fish
 cp "$(dirname "$0")/bash_profile" ~/.bash_profile
 cp "$(dirname "$0")/bashenv" ~/.bashenv
