@@ -45,7 +45,9 @@ No test runner. No build step. No linter (beyond commitlint).
 
 | File | Role |
 |---|---|
-|`install.sh`|**Entry point** — provisions entire dev environment. Installs: Fish, NVM+Node, Bun, Deno, Tailscale, Starship, Zoxide, UV, Claude Code, Beads, Worktrunk (`wt` + fish shell integration), yq, pipx packages (skill-seekers, code-review-graph), bun globals (@servicenow/sdk, @oh-my-pi/pi-coding-agent, playwright), pi agent caveman skill|
+|`install.sh`|**Entry point** — provisions entire dev environment. Installs: Fish, NVM+Node, Bun, Deno, Tailscale, Starship, Zoxide, UV, Claude Code, Beads, Worktrunk (`wt` + fish shell integration), yq, OpenDesign (build nativo — ver `scripts/`), pipx packages (skill-seekers, code-review-graph), bun globals (@servicenow/sdk, @oh-my-pi/pi-coding-agent, playwright), pi agent caveman skill|
+|`scripts/install-open-design.sh`| Clona `~/open-design` e builda com o **node 24 do NVM** (engines `~24`; `better-sqlite3` é nativo, ABI tem que casar). Idempotente; `FORCE=1` atualiza e rebuida. Contorna o `~/jsconfig.json` inválido do sn-scriptsync movendo-o durante o build e restaurando no fim. |
+|`scripts/open-design-serve.sh`| Sobe o daemon do OpenDesign em `127.0.0.1:7456` (dados em `~/.od`). No-op se já está rodando; chamado pelo `install.sh` depois do `wait`. |
 | `config.fish` | Fish shell config — Starship init, PATH additions |
 | `bash_profile` | Bash login profile — PATH, BASH_ENV, auto-exec Fish |
 | `bashenv` | Non-interactive bash env — PATH only |

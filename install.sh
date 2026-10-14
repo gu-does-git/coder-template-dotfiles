@@ -54,7 +54,13 @@ log_step "Installers em background (bun, starship, zoxide, deno, uv, claude, bea
     [ -x /usr/local/bin/wt ] && [ "${FORCE:-}" != "1" ] || curl -fsSL https://github.com/max-sixty/worktrunk/releases/latest/download/worktrunk-x86_64-unknown-linux-musl.tar.xz | sudo tar -xJ -C /usr/local/bin --strip-components=1 worktrunk-x86_64-unknown-linux-musl/wt
 ) &
 (
-    [ -x /usr/local/bin/yq ] && [ "${FORCE:-}" != "1" ] || curl -fsSL -o /tmp/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo install -m 0755 /tmp/yq /usr/local/bin/yq
+    command -v yq >/dev/null 2>&1 && [ "${FORCE:-}" != "1" ] || curl -fsSL -o /tmp/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo install -m 0755 /tmp/yq /usr/local/bin/yq
+) &
+# open-design (workspace de design com agentes): build nativo do source. É o
+# passo mais pesado daqui (pnpm install + build de ~20 pacotes), então roda
+# junto do apt. O daemon é iniciado depois do `wait`, lá embaixo.
+(
+    [ -f "$HOME/open-design/apps/daemon/dist/cli.js" ] && [ -d "$HOME/open-design/apps/web/out" ] && [ "${FORCE:-}" != "1" ] || bash "$(dirname "$0")/scripts/install-open-design.sh"
 ) &
 
 # ────────────────────────────────────────────────────────────────────────
@@ -96,6 +102,13 @@ sudo apt install -y --no-install-recommends \
 wait
 
 export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
+
+# open-design: sobe o daemon (loopback 7456). Só aqui, depois do `wait`, o
+# build em background já terminou; o script é no-op se não há build ou se já
+# está rodando.
+if [ -f "$HOME/open-design/apps/daemon/dist/cli.js" ]; then
+    bash "$(dirname "$0")/scripts/open-design-serve.sh" || true
+fi
 
 # ────────────────────────────────────────────────────────────────────────
 #  NVM + Node (sequencial — nvm precisa do shell)

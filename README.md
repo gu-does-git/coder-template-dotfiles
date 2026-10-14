@@ -14,8 +14,18 @@ Everything is **idempotent** — the workspace home persists across restarts, so
 | **CLI tools** (binaries) | [timetrace](https://github.com/dominikbraun/timetrace), [Worktrunk](https://worktrunk.dev/) (`wt` — git worktree CLI, with Fish shell integration), [yq](https://mikefarah.gitbook.io/yq), [Tailscale](https://tailscale.com/) |
 | **Agents & dev tooling** | [Claude Code](https://claude.ai/code), [oh-my-pi / pi coding agent](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent) (+ `pi-caveman` plugin), [beads](https://github.com/steveyegge/beads), [Playwright](https://playwright.dev/) Chromium (with deps), [ServiceNow SDK](https://www.npmjs.com/package/@servicenow/sdk), `vercel`, `skillkit`, `bun-docx` |
 | **Python tooling** (uv) | [skill-seekers](https://pypi.org/project/skill-seekers/), [code-review-graph](https://code-review-graph.com/) |
+| **Design workspace** | [OpenDesign](https://github.com/nexu-io/open-design) — build nativo do source em `~/open-design`, daemon em `127.0.0.1:7456` |
 
 Worktrunk ships as a prebuilt musl binary into `/usr/local/bin/wt`, then `wt config shell install fish --yes` writes `~/.config/fish/functions/wt.fish` + completions — without that wrapper `wt switch` cannot change the shell directory.
+
+### OpenDesign (build nativo)
+
+`scripts/install-open-design.sh` clona `~/open-design` e builda com o **node 24 do NVM**: o repo declara `engines ~24` e o `better-sqlite3` é módulo nativo (ABI), então não pode pegar o node default da imagem. `scripts/open-design-serve.sh` sobe o daemon em `127.0.0.1:7456` (dados em `~/.od`, log em `/tmp/open-design.log`), é no-op se já está rodando, e o `install.sh` chama depois do `wait`.
+
+O projeto **não publica artefato Linux nem pacote npm**, então build do source é o único caminho suportado. Dois detalhes do ambiente mordem de novo em qualquer build aqui:
+
+- `~/jsconfig.json` (criado pelo **sn-scriptsync**) só tinha um comentário `/* */`, ou seja **não era JSON** — e o esbuild, procurando `tsconfig`/`jsconfig` subindo a árvore, saía do repo e morria nele (`4:2 Unexpected end of file in JSON`). **Removido em 2026-10-14**; se o sn-scriptsync recriar, o installer move durante o build e restaura no fim (`trap`) em vez de falhar.
+- A workspace **não tem cron** (PID 1 é o agent do Coder), então nada em `/etc/cron.d` roda — o autostart é o `install.sh`, não crontab.
 
 ## 🏃 How to run
 
@@ -27,7 +37,7 @@ Designed to run in the Coder workspace bootstrap (as root, non-interactive; `DEB
 
 ### Order of operations
 
-1. **Background installers** — `bun`, `starship`, `zoxide`, `deno`, `uv`, `claude`, `beads`, `timetrace`, `wt`, `yq` start in parallel (no apt, so they overlap the apt work).
+1. **Background installers** — `bun`, `starship`, `zoxide`, `deno`, `uv`, `claude`, `beads`, `timetrace`, `wt`, `yq` start in parallel (no apt, so they overlap the apt work). O OpenDesign entra na mesma leva (o build é pesado: `pnpm install` + ~20 pacotes) e o daemon só sobe depois do `wait`.
 2. **apt** — adds the Fish PPA + GitHub CLI apt repo, one `apt-get update`, a conditional `apt upgrade` (simulated first: skipped when nothing is pending), then a single consolidated `apt install`.
 3. **`wait`** — joins the background installers, then PATH is expanded with `~/.bun/bin` and `~/.local/bin`.
 4. **NVM + Node** — sequential (`nvm install node`).
