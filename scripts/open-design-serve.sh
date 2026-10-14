@@ -31,12 +31,22 @@ IFS= read -r NODE_BIN < "$OD_HOME/.od-node"
 
 cd "$OD_HOME"
 mkdir -p "$OD_DATA_DIR"
+# Origens do proxy: o guard de CSRF do app (`origin-validation.ts`) compara a
+# origem recebida com o que ele escuta (loopback); atrás de reverse proxy
+# (Coder) a checagem de same-origin não fecha — sem esta lista, PUT/POST
+# devolvem 403 (`/api/app-config`, `/api/test/connection`). Origens, sem
+# wildcard: uma entrada por forma de URL.
+#
+# Loopback basta para o bind: quem disca o app é o agent, de dentro da workspace
+# (`Type=workspace_app ... 200`). Não trocar por 0.0.0.0 sem medir, que aí o
+# guard do `server.ts` exige OD_DISABLE_API_AUTH e a porta passa a responder em
+# toda interface.
+#
+# Nada de comentário DENTRO da cadeia de `\`: o `#` engole o resto da linha já
+# concatenada e as variáveis seguintes nunca chegam ao processo.
+OD_ALLOWED_ORIGINS="${OD_ALLOWED_ORIGINS:-https://open-design--work--gu-does-git.gupve.dev,https://open-design--main--work--gu-does-git.gupve.dev}" \
 NODE_ENV=production \
 OD_PORT="$OD_PORT" \
-# Loopback basta: o agent do Coder disca o app por dentro da workspace e isso
-# já devolveu 200 (`Type=workspace_app SlugOrPort=open-design`) — não trocar por
-# 0.0.0.0 sem medir, que aí o guard do app (`server.ts`) exige
-# OD_DISABLE_API_AUTH e a porta passa a responder em toda interface.
 OD_DATA_DIR="$OD_DATA_DIR" \
 OD_BIND_HOST=127.0.0.1 \
     nohup "$NODE_BIN" "$PATTERN" --no-open >> "$LOG" 2>&1 &
