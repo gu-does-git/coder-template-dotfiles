@@ -12,7 +12,9 @@ set -euo pipefail
 OD_HOME="${OD_HOME:-$HOME/open-design}"
 OD_PORT="${OD_PORT:-7456}"
 OD_DATA_DIR="${OD_DATA_DIR:-$HOME/.od}"
-LOG="${OD_LOG:-/tmp/open-design.log}"
+# Log dentro de $OD_DATA_DIR (home, persistente): /tmp é do container e some
+# quando a workspace reinicia — foi o que aconteceu em 2026-10-14.
+LOG="${OD_LOG:-$OD_DATA_DIR/open-design.log}"
 PATTERN="apps/daemon/dist/cli.js"
 
 if pgrep -f "$PATTERN" >/dev/null 2>&1; then
