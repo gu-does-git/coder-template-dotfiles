@@ -17,7 +17,10 @@ OD_DATA_DIR="${OD_DATA_DIR:-$HOME/.od}"
 LOG="${OD_LOG:-$OD_DATA_DIR/open-design.log}"
 PATTERN="apps/daemon/dist/cli.js"
 
-if pgrep -f "$PATTERN" >/dev/null 2>&1; then
+# Liveness por porta, não por pgrep: `pgrep -f` casa com qualquer shell cujo
+# cmdline contenha o padrão (um `bash -lc "… dist/cli.js …"` basta) e aí o
+# script conclui "já rodando" e nunca sobe nada. O health responde de verdade.
+if curl -sf -o /dev/null --max-time 3 "http://127.0.0.1:$OD_PORT/api/health"; then
     echo "open-design-serve: já rodando (porta $OD_PORT)"
     exit 0
 fi
@@ -30,8 +33,12 @@ cd "$OD_HOME"
 mkdir -p "$OD_DATA_DIR"
 NODE_ENV=production \
 OD_PORT="$OD_PORT" \
-OD_BIND_HOST=127.0.0.1 \
+# Loopback basta: o agent do Coder disca o app por dentro da workspace e isso
+# já devolveu 200 (`Type=workspace_app SlugOrPort=open-design`) — não trocar por
+# 0.0.0.0 sem medir, que aí o guard do app (`server.ts`) exige
+# OD_DISABLE_API_AUTH e a porta passa a responder em toda interface.
 OD_DATA_DIR="$OD_DATA_DIR" \
+OD_BIND_HOST=127.0.0.1 \
     nohup "$NODE_BIN" "$PATTERN" --no-open >> "$LOG" 2>&1 &
 
 echo "open-design-serve: iniciado (porta $OD_PORT, log $LOG)"
