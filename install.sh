@@ -287,7 +287,13 @@ log_step "✅ Provisionamento completo"
 DOTFILES_CLONE="${DOTFILES_CLONE:-$HOME/.config/coderv2/dotfiles}"
 if [ -d "$DOTFILES_CLONE/.git" ]; then
     git -C "$DOTFILES_CLONE" stash push -m "configs gerados (auto, $(date +%F))" >/dev/null 2>&1 || true
-    if git -C "$DOTFILES_CLONE" fetch --depth 1 origin master >/dev/null 2>&1; then
+    # Nada de --depth: clone raso + fetch raso dá "refusing to merge unrelated
+    # histories". Se o clone já estiver raso, desrasa primeiro (senão o merge
+    # não acha ancestral comum).
+    if [ "$(git -C "$DOTFILES_CLONE" rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
+        git -C "$DOTFILES_CLONE" fetch --unshallow origin >/dev/null 2>&1 || true
+    fi
+    if git -C "$DOTFILES_CLONE" fetch origin master >/dev/null 2>&1; then
         if git -C "$DOTFILES_CLONE" merge --ff-only FETCH_HEAD >/dev/null 2>&1; then
             echo "dotfiles clone: em dia ($(git -C "$DOTFILES_CLONE" log --oneline -1))"
         fi
