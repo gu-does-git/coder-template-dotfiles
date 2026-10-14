@@ -276,3 +276,20 @@ else
 fi
 
 log_step "✅ Provisionamento completo"
+
+# O module clona este repo em ~/.config/coderv2/dotfiles e só atualiza se o
+# working tree estiver limpo — e ele *fica* sujo sozinho, porque as ferramentas
+# de agente escrevem config lá dentro (.claude/, .gemini/, .mcp.json, AGENTS.md…).
+# Resultado: `error: Your local changes … would be overwritten by merge` +
+# `Failed to update repo, continuing...` e o start seguinte roda o commit
+# ANTIGO, sem nenhum erro óbvio. Limpar no fim de cada run faz o pull do
+# próximo start sempre funcionar.
+DOTFILES_CLONE="${DOTFILES_CLONE:-$HOME/.config/coderv2/dotfiles}"
+if [ -d "$DOTFILES_CLONE/.git" ]; then
+    git -C "$DOTFILES_CLONE" stash push -m "configs gerados (auto, $(date +%F))" >/dev/null 2>&1 || true
+    if git -C "$DOTFILES_CLONE" fetch --depth 1 origin master >/dev/null 2>&1; then
+        if git -C "$DOTFILES_CLONE" merge --ff-only FETCH_HEAD >/dev/null 2>&1; then
+            echo "dotfiles clone: em dia ($(git -C "$DOTFILES_CLONE" log --oneline -1))"
+        fi
+    fi
+fi
