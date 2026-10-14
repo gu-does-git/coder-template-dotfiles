@@ -263,7 +263,11 @@ bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright vercel skill
 # passa (`--mode rpc`, `--model`, `--thinking`, `--append-system-prompt`) são
 # exatamente as que o omp aceita, e o handshake pi-RPC responde
 # (`{"type":"ready","protocolVersion":1,...}`).
+# Dois destinos de propósito: o adapter só passou a aceitar o nome `pi` depois
+# que ele apareceu ao lado do próprio `omp` em ~/.bun/bin (só no ~/.local/bin
+# ele não aparecia na detecção); o de ~/.local/bin fica porque vem antes no PATH.
 ln -sf "$HOME/.bun/bin/omp" "$HOME/.local/bin/pi"
+ln -sf "$HOME/.bun/bin/omp" "$HOME/.bun/bin/pi"
 # pi-caveman: plugin npm do omp (instalado via omp plugin install, não via
 # comando `pi` — binário não existe no omp v18+). Já presente no home.
 omp plugin install pi-caveman 2>/dev/null || true
