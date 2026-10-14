@@ -190,7 +190,13 @@ fi
 
 if [ "${OAUTH_CLIENT_SECRET:-}" != "" ]; then
     log_step "Tailscale up"
-    sudo nohup /usr/sbin/tailscaled > ~/tailscaled.log 2>&1 & disown
+    # --state na home (NFS) e não no /var/lib/tailscale do container: sem isso
+    # cada start registra um NÓ NOVO no tailnet ("work", "work-1", … "work-4")
+    # porque o nome antigo fica preso num nó offline. O Coder disca o agent
+    # pelo nome do nó, então a pilha de órfãos vira 502 intermitente
+    # (`dial context: connect tcp [fd7a:…]:7456: connection was refused`).
+    mkdir -p "$HOME/.tailscale"
+    sudo nohup /usr/sbin/tailscaled --state="$HOME/.tailscale/tailscaled.state" > ~/tailscaled.log 2>&1 & disown
     # --accept-dns=false: container não tem systemd-resolved; sem a flag o
     # MagicDNS reescreve /etc/resolv.conf p/ 100.100.100.100 e todo lookup
     # externo (pypi, etc.) quebra após o `up`.

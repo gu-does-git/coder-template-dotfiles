@@ -48,6 +48,18 @@ Designed to run in the Coder workspace bootstrap (as root, non-interactive; `DEB
 9. **Scripts + crontab** — copies `scripts/*` to `~/.local/bin`, installs `/etc/cron.d/coder-template`.
 10. **Bun globals + Playwright** — global npm packages, `pi-caveman` plugin, Chromium download.
 
+### Caveat do bootstrap (vale para toda mudança neste repo)
+
+O module de dotfiles clona o repo em `~/.config/coderv2/dotfiles` e faz `git pull` a cada start. Se aquele clone tiver mudanças locais — e ele *ganha* mudanças locais sozinho, porque as ferramentas de agente escrevem config lá dentro (`.claude/`, `.gemini/`, `.codebuddy/`, `.cursorrules`, `.mcp.json`…) — o pull **falha**, o log diz `Failed to update repo, continuing...` e o `install.sh` que roda é o **do commit antigo**. Sintoma: você commita, dá restart e nada muda, sem nenhum erro visível além dessa linha.
+
+Antes de confiar num restart:
+
+```bash
+git -C ~/.config/coderv2/dotfiles stash push -m "configs gerados"
+git -C ~/.config/coderv2/dotfiles merge --ff-only origin/master
+awk '/open-design-serve|bun\/bin\/omp/ {p=1} END {print p ? "clone ok" : "clone DESATUALIZADO"}' ~/.config/coderv2/dotfiles/install.sh
+```
+
 ### Flags
 
 | Flag | Effect |
