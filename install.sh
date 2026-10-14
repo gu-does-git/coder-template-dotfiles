@@ -251,6 +251,13 @@ log_step "copying crontab"
 
 log_step "bun global packages"
 bun install -g @servicenow/sdk @oh-my-pi/pi-coding-agent playwright vercel skillkit bun-docx
+# OpenDesign (e outros) só sabem procurar o runtime pelo comando `pi`; neste
+# workspace o binário é `omp` (`pi-coding-agent` não expõe mais o nome `pi`).
+# O shim faz `pi` resolver para o omp — as flags que o adapter do OpenDesign
+# passa (`--mode rpc`, `--model`, `--thinking`, `--append-system-prompt`) são
+# exatamente as que o omp aceita, e o handshake pi-RPC responde
+# (`{"type":"ready","protocolVersion":1,...}`).
+ln -sf "$HOME/.bun/bin/omp" "$HOME/.local/bin/pi"
 # pi-caveman: plugin npm do omp (instalado via omp plugin install, não via
 # comando `pi` — binário não existe no omp v18+). Já presente no home.
 omp plugin install pi-caveman 2>/dev/null || true
